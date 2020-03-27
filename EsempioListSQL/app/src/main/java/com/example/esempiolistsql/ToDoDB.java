@@ -1,5 +1,6 @@
 package com.example.esempiolistsql;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,6 +19,18 @@ public class ToDoDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(ToDoTableHelper.CREATE);
+
+        for (int i = 0; i < 10; i++) {
+            ContentValues vValues = new ContentValues();
+            vValues.put(ToDoTableHelper.DATE, "2" + i + "/2/2020");
+            vValues.put(ToDoTableHelper.DATE_DONE, "2" + i + 4 + "/2/2020");
+            vValues.put(ToDoTableHelper.DESCRIPTION, "descrizione" + i);
+            if (i % 2 == 0) {
+                vValues.put(ToDoTableHelper.DONE, 1);
+            }
+            db.insert(ToDoTableHelper.TABLE_NAME, null, vValues);
+
+        }
 
     }
 
