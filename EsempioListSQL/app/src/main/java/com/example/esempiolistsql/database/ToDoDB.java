@@ -1,4 +1,4 @@
-package com.example.esempiolistsql;
+package com.example.esempiolistsql.database;
 
 import android.content.ContentValues;
 import android.content.Context;

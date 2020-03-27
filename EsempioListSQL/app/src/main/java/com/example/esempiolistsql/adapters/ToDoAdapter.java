@@ -1,4 +1,4 @@
-package com.example.esempiolistsql;
+package com.example.esempiolistsql.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import com.example.esempiolistsql.R;
+import com.example.esempiolistsql.database.ToDoTableHelper;
 
 public class ToDoAdapter extends CursorAdapter {
 

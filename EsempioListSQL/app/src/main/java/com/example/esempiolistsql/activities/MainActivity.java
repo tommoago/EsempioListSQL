@@ -1,4 +1,4 @@
-package com.example.esempiolistsql;
+package com.example.esempiolistsql.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.example.esempiolistsql.R;
+import com.example.esempiolistsql.adapters.ToDoAdapter;
+import com.example.esempiolistsql.database.ToDoDB;
+import com.example.esempiolistsql.database.ToDoTableHelper;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,8 +1,10 @@
-package com.example.esempiolistsql;
+package com.example.esempiolistsql.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.esempiolistsql.R;
 
 public class InsertActivity extends AppCompatActivity {
 
