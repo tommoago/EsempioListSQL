@@ -8,7 +8,7 @@
     tools:context=".activities.InsertActivity">
 
     <TextView
-        android:id="@+id/creationDate"
+        android:id="@+id/creationDateTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="24sp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textData"
+        android:id="@+id/creationDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="22sp"
@@ -33,11 +33,11 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/creationDate"
+        app:layout_constraintTop_toBottomOf="@id/creationDateTitle"
         tools:text="20/04/2020"/>
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/descriptionTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="24sp"
@@ -49,23 +49,23 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textData" />
+        app:layout_constraintTop_toBottomOf="@id/creationDate" />
 
     <EditText
-        android:id="@+id/editDescription"
+        android:id="@+id/descriptionInput"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:hint="@string/description_hint"
         android:textSize="22sp"
         android:gravity="top"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnInsert"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTitle" />
 
     <Button
-        android:id="@+id/btnInsert"
+        android:id="@+id/saveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/save"

@@ -25,7 +25,9 @@ public class InsertActivity extends AppCompatActivity {
         setContentView(R.layout.activity_insert);
         setTitle(R.string.add_new_activity);
 
-        dateLabel = findViewById(R.id.textData);
+        dateLabel = findViewById(R.id.creationDate);
+        descriptionInput = findViewById(R.id.descriptionInput);
+        saveButton = findViewById(R.id.saveButton);
 
         Date today = new Date();
         String todayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today);
