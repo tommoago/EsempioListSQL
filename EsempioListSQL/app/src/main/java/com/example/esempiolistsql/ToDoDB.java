@@ -23,7 +23,7 @@ public class ToDoDB extends SQLiteOpenHelper {
         for (int i = 0; i < 10; i++) {
             ContentValues vValues = new ContentValues();
             vValues.put(ToDoTableHelper.DATE, "2" + i + "/2/2020");
-            vValues.put(ToDoTableHelper.DATE_DONE, "2" + i + 4 + "/2/2020");
+            vValues.put(ToDoTableHelper.DATE_DONE, "2" + (i + 4) + "/2/2020");
             vValues.put(ToDoTableHelper.DESCRIPTION, "descrizione" + i);
             if (i % 2 == 0) {
                 vValues.put(ToDoTableHelper.DONE, 1);
