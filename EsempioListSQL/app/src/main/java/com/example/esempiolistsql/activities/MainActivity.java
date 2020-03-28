@@ -44,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
         ToDoDB toDoDatabase = new ToDoDB(this);
         mDatabase =  toDoDatabase.getReadableDatabase();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (mDatabase != null) {
             loadToDos();
         } else {
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             mButtonNew.setEnabled(false);
             Toast.makeText(this, R.string.database_error, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void loadToDos() {
