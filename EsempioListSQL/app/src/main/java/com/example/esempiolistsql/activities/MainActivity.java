@@ -1,12 +1,15 @@
 package com.example.esempiolistsql.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,15 +18,26 @@ import com.example.esempiolistsql.R;
 import com.example.esempiolistsql.adapters.ToDoAdapter;
 import com.example.esempiolistsql.database.ToDoDB;
 import com.example.esempiolistsql.database.ToDoTableHelper;
+import com.example.esempiolistsql.fragments.ConfirmDialogFragment;
+import com.example.esempiolistsql.fragments.ConfirmDialogFragmentListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-    ListView mList;
-    Button mButtonNew;
+public class MainActivity extends AppCompatActivity implements ConfirmDialogFragmentListener {
 
-    ToDoAdapter mToDoAdapter;
+    final String tableName = ToDoTableHelper.TABLE_NAME;
+    final String sortOrder = ToDoTableHelper.DATE + " ASC ";
 
-    SQLiteDatabase mDatabase;
+    ListView toDoList;
+    Button newToDoButton;
+
+    ToDoAdapter toDoAdapter;
+
+    ToDoDB toDoDatabase;
+    SQLiteDatabase database;
+    Cursor toDoItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +45,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle(R.string.activities_list);
 
-        mButtonNew = findViewById(R.id.buttonNew);
-        mList = findViewById(R.id.listViewToDo);
+        toDoDatabase = new ToDoDB(this);
 
-        mButtonNew.setOnClickListener(new View.OnClickListener() {
+        toDoList = findViewById(R.id.listViewToDo);
+        newToDoButton = findViewById(R.id.buttonNew);
+
+        newToDoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent insertToDoIntent = new Intent(MainActivity.this, InsertActivity.class);
@@ -42,39 +58,124 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ToDoDB toDoDatabase = new ToDoDB(this);
-        mDatabase =  toDoDatabase.getReadableDatabase();
+        toDoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                updateToDo(position);
+            }
+        });
+
+        toDoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment(getString(R.string.delete_todo_title),
+                        getString(R.string.delete_todo_message),
+                        id);
+                dialogFragment.show(fragmentManager, ConfirmDialogFragment.class.getName());
+                return true;
+            }
+        });
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        database = toDoDatabase.getReadableDatabase();
 
-        if (mDatabase != null) {
+        if (database != null) {
             loadToDos();
         } else {
             //TODO show an empty view inside ListView
-            mButtonNew.setEnabled(false);
+            newToDoButton.setEnabled(false);
             Toast.makeText(this, R.string.database_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (toDoItems != null)
+            toDoItems.close();
+        if (database != null)
+            database.close();
+    }
+
+    @Override
+    public void onPositivePressed(long toDoId) {
+        deleteToDo(toDoId);
+    }
+
+    @Override
+    public void onNegativePressed() {
 
     }
 
     private void loadToDos() {
-        final String tableName = ToDoTableHelper.TABLE_NAME;
-        final String sortOrder = ToDoTableHelper.DATE + " ASC ";
-        final Cursor toDoItems = mDatabase.query(tableName, null, null, null,
+        toDoItems = database.query(tableName, null, null, null,
                 null, null, sortOrder);
         if (toDoItems != null) {
-            if (mToDoAdapter == null) {
-                mToDoAdapter = new ToDoAdapter(this, toDoItems);
-                mList.setAdapter(mToDoAdapter);
+            if (toDoAdapter == null) {
+                toDoAdapter = new ToDoAdapter(this, toDoItems);
+                toDoList.setAdapter(toDoAdapter);
             } else {
-                mToDoAdapter.changeCursor(toDoItems);
-                mToDoAdapter.notifyDataSetChanged();
+                toDoAdapter.changeCursor(toDoItems);
+                toDoAdapter.notifyDataSetChanged();
             }
         }
     }
-}
 
+    private void updateToDo(int position) {
+        if (toDoAdapter != null) {
+            Cursor toDoCursor = (Cursor) toDoAdapter.getItem(position);
+            if (toDoCursor != null) {
+                boolean isDone = toDoCursor.getInt(toDoCursor.getColumnIndex(ToDoTableHelper.DONE)) == 1;
+                if (isDone) {
+                    Toast.makeText(MainActivity.this, R.string.todo_already_done, Toast.LENGTH_SHORT).show();
+                } else if (database != null) {
+                    Date today = new Date();
+                    String todayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today);
+                    int id = toDoCursor.getInt(toDoCursor.getColumnIndex(ToDoTableHelper._ID));
+                    String creationDate = toDoCursor.getString(toDoCursor.getColumnIndex(ToDoTableHelper.DATE));
+                    String description = toDoCursor.getString(toDoCursor.getColumnIndex(ToDoTableHelper.DESCRIPTION));
+
+                    String tableName = ToDoTableHelper.TABLE_NAME;
+                    String whereClause = ToDoTableHelper._ID + "=?";
+                    String[] whereArgs = new String[] { String.valueOf(id) };
+
+                    ContentValues updatedToDoValues = new ContentValues();
+                    updatedToDoValues.put(ToDoTableHelper.DATE, creationDate);
+                    updatedToDoValues.put(ToDoTableHelper.DESCRIPTION, description);
+                    updatedToDoValues.put(ToDoTableHelper.DATE_DONE, todayFormat.toString());
+                    updatedToDoValues.put(ToDoTableHelper.DONE, 1);
+                    int updatedRows = database.update(tableName, updatedToDoValues, whereClause, whereArgs);
+                    if (updatedRows > 0) {
+                        Toast.makeText(MainActivity.this, R.string.todo_update_success, Toast.LENGTH_SHORT).show();
+                        loadToDos();
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.todo_update_error, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.todo_update_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void deleteToDo(long toDoId) {
+        if (toDoId > 0 && database != null) {
+            String whereClause = ToDoTableHelper._ID + "=?";
+            String[] whereArgs = new String[] { String.valueOf(toDoId) };
+            int deletedRows = database.delete(ToDoTableHelper.TABLE_NAME, whereClause, whereArgs);
+            if (deletedRows > 0) {
+                Toast.makeText(MainActivity.this, R.string.todo_delete_success, Toast.LENGTH_SHORT).show();
+                loadToDos();
+            } else {
+                Toast.makeText(MainActivity.this, R.string.todo_delete_error, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, R.string.todo_delete_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+}
