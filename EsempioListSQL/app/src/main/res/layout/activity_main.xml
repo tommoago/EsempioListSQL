@@ -11,7 +11,7 @@
         android:id="@+id/listViewToDo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNew"
+        app:layout_constraintBottom_toTopOf="@+id/buttonListUsers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,6 +22,15 @@
         android:layout_height="wrap_content"
         android:text="@string/add_new_activity"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonListUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lista utenti"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

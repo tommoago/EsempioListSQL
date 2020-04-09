@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     final String sortOrder = ToDoTableHelper.DATE + " ASC ";
 
     ListView toDoList;
-    Button newToDoButton;
+    Button newToDoButton,listUsersButton;
 
     ToDoAdapter toDoAdapter;
 
@@ -49,6 +49,14 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
 
         toDoList = findViewById(R.id.listViewToDo);
         newToDoButton = findViewById(R.id.buttonNew);
+        listUsersButton=findViewById(R.id.buttonListUsers);
+        listUsersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent listUserIntent = new Intent(MainActivity.this, ListUtsersActivity.class);
+                startActivity(listUserIntent);
+            }
+        });
 
         newToDoButton.setOnClickListener(new View.OnClickListener() {
             @Override
