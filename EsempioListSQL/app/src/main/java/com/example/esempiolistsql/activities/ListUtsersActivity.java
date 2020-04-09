@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.esempiolistsql.R;
@@ -27,6 +28,7 @@ public class ListUtsersActivity extends AppCompatActivity {
     Button newUser;
     Cursor users;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +36,12 @@ public class ListUtsersActivity extends AppCompatActivity {
         list = findViewById(R.id.listUsers);
         toDoDB = new ToDoDB(this);
         newUser = findViewById(R.id.buttonNewUser);
-
-
     }
+
+
+
+
+
 
     @Override
     protected void onResume() {

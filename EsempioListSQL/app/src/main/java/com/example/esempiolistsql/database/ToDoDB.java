@@ -21,15 +21,21 @@ public class ToDoDB extends SQLiteOpenHelper {
         db.execSQL(ToDoTableHelper.CREATE);
         db.execSQL(UserTableHelper.CREATE);
 
+        ContentValues vValues = new ContentValues();
+        vValues.put(UserTableHelper._ID, 0);
+        vValues.put(UserTableHelper.NAME, "");
+        vValues.put(UserTableHelper.SURNAME, "NESSUN UTENTE");
+        vValues.put(UserTableHelper.USERNAME, "");
+        db.insert(UserTableHelper.TABLE_NAME, null, vValues);
 
-        for (int i = 0; i < 10; i++) {
-            ContentValues vValues = new ContentValues();
-            vValues.put(UserTableHelper.NAME, "nome" + i);
-            vValues.put(UserTableHelper.SURNAME, "cognome" + i);
-            vValues.put(UserTableHelper.USERNAME, "username" + i);
-            db.insert(UserTableHelper.TABLE_NAME, null, vValues);
-
-        }
+//        for (int i = 0; i < 10; i++) {
+//            ContentValues vValues = new ContentValues();
+//            vValues.put(UserTableHelper.NAME, "nome" + i);
+//            vValues.put(UserTableHelper.SURNAME, "cognome" + i);
+//            vValues.put(UserTableHelper.USERNAME, "username" + i);
+//            db.insert(UserTableHelper.TABLE_NAME, null, vValues);
+//
+//        }
 
 
 //        for (int i = 0; i < 10; i++) {

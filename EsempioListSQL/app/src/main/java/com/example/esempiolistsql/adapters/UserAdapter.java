@@ -44,6 +44,7 @@ public class UserAdapter extends CursorAdapter {
         nameLaber.setText(name);
         surnameLabel.setText(surname);
         usernameLabel.setText(username);
+
     }
 
 }

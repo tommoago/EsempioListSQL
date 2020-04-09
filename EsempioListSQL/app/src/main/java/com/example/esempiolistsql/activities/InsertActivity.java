@@ -3,18 +3,23 @@ package com.example.esempiolistsql.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.esempiolistsql.R;
+import com.example.esempiolistsql.adapters.UserAdapter;
 import com.example.esempiolistsql.database.ToDoDB;
 import com.example.esempiolistsql.database.ToDoTableHelper;
+import com.example.esempiolistsql.database.UserTableHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +30,7 @@ public class InsertActivity extends AppCompatActivity {
     TextView dateLabel;
     EditText descriptionInput;
     Button saveButton;
+    Spinner spinnerUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,14 @@ public class InsertActivity extends AppCompatActivity {
         dateLabel = findViewById(R.id.creationDate);
         descriptionInput = findViewById(R.id.descriptionInput);
         saveButton = findViewById(R.id.saveButton);
+        spinnerUsers=findViewById(R.id.spinnerUsers);
+        popolateSpinnerUsers();
+        spinnerUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
         Date today = new Date();
         String todayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today);
@@ -47,6 +61,16 @@ public class InsertActivity extends AppCompatActivity {
                 insertToDo();
             }
         });
+    }
+
+    private void popolateSpinnerUsers() {
+        ToDoDB db = new ToDoDB(this);
+        SQLiteDatabase toDoDatabase = db.getReadableDatabase();
+        Cursor cursor=toDoDatabase.query(UserTableHelper.TABLE_NAME,null,null,null,null,null,null);
+
+        UserAdapter adapter=new UserAdapter(this,cursor);
+        spinnerUsers.setAdapter(adapter);
+
     }
 
     private void insertToDo() {
