@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.esempiolistsql.R;
 import com.example.esempiolistsql.database.ToDoTableHelper;
+import com.example.esempiolistsql.database.UserTableHelper;
 
 public class UserAdapter extends CursorAdapter {
 
@@ -25,26 +26,24 @@ public class UserAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater vInflater = LayoutInflater.from(context);
-        View vView = vInflater.inflate(R.layout.cell_todo, null);
+        View vView = vInflater.inflate(R.layout.cell_user, null);
         return vView;
     }
 
     @Override
     public void bindView(View view, Context context, final Cursor cursor) {
-        String creationDate = cursor.getString(cursor.getColumnIndex(ToDoTableHelper.DATE));
-        String doneDate = cursor.getString(cursor.getColumnIndex(ToDoTableHelper.DATE_DONE));
-        String description = cursor.getString(cursor.getColumnIndex(ToDoTableHelper.DESCRIPTION));
-        boolean isDone = cursor.getInt(cursor.getColumnIndex(ToDoTableHelper.DONE)) == 1;
+        String name = cursor.getString(cursor.getColumnIndex(UserTableHelper.NAME));
+        String surname = cursor.getString(cursor.getColumnIndex(UserTableHelper.SURNAME));
+        String username = cursor.getString(cursor.getColumnIndex(UserTableHelper.USERNAME));
 
-        TextView creationDateLabel = view.findViewById(R.id.textViewDataIns),
-                doneDateLabel = view.findViewById(R.id.textViewDataDone),
-                descriptionLabel = view.findViewById(R.id.textViewDescription);
-        ImageView checkImage = view.findViewById(R.id.done);
+        TextView nameLaber = view.findViewById(R.id.textViewName),
+                surnameLabel = view.findViewById(R.id.textViewSurname),
+                usernameLabel = view.findViewById(R.id.textViewUsername);
 
-        creationDateLabel.setText(creationDate);
-        doneDateLabel.setText(doneDate);
-        descriptionLabel.setText(description);
-        checkImage.setImageTintList(ColorStateList.valueOf(isDone ? ContextCompat.getColor(context, R.color.colorAccent) : Color.GRAY));
+
+        nameLaber.setText(name);
+        surnameLabel.setText(surname);
+        usernameLabel.setText(username);
     }
 
 }
