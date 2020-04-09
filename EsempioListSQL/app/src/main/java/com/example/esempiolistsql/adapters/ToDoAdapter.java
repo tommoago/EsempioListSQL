@@ -40,16 +40,22 @@ public class ToDoAdapter extends CursorAdapter {
         String description = cursor.getString(cursor.getColumnIndex(ToDoTableHelper.DESCRIPTION));
         boolean isDone = cursor.getInt(cursor.getColumnIndex(ToDoTableHelper.DONE)) == 1;
         int id = cursor.getInt(cursor.getColumnIndex(ToDoTableHelper.ID_USER));
-        Log.d("asda", "bindView: "+id);
+        Log.d("asda", "bindView: " + id);
 
-        String username = "";
-
-        SQLiteDatabase db = new ToDoDB(context).getReadableDatabase();
-        Cursor datas = db.query(UserTableHelper.TABLE_NAME, new String[]{UserTableHelper.USERNAME, UserTableHelper._ID}, UserTableHelper._ID + " = " + id,
-                null, null, null, null);
-        datas.moveToNext();
-        username = datas.getString(datas.getColumnIndex(UserTableHelper.USERNAME));
-
+        String username = "nessun utente";
+        if (id != 0) {
+            SQLiteDatabase db = new ToDoDB(context).getReadableDatabase();
+            Cursor datas = db.query(UserTableHelper.TABLE_NAME, new String[]{UserTableHelper.USERNAME, UserTableHelper._ID}, UserTableHelper._ID + " = " + id,
+                    null, null, null, null);
+            datas.moveToNext();
+            if (datas.getCount() >= 1) {
+                username = datas.getString(datas.getColumnIndex(UserTableHelper.USERNAME));
+            }else{
+                username="utente cancellato";
+            }
+            datas.close();
+            db.close();
+        }
         TextView creationDateLabel = view.findViewById(R.id.textViewDataIns),
                 doneDateLabel = view.findViewById(R.id.textViewDataDone),
                 descriptionLabel = view.findViewById(R.id.textViewDescription),
