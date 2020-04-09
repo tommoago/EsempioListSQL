@@ -16,5 +16,4 @@ public class ToDoTableHelper implements BaseColumns {
             DONE + " INTEGER DEFAULT 0 , " +
             DATE + " TEXT , " +
             DATE_DONE + " TEXT ) ;";
-
 }
