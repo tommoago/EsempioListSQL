@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -16,6 +17,8 @@ import com.example.esempiolistsql.R;
 import com.example.esempiolistsql.adapters.UserAdapter;
 import com.example.esempiolistsql.database.ToDoDB;
 import com.example.esempiolistsql.database.UserTableHelper;
+
+import java.util.List;
 
 public class ListUtsersActivity extends AppCompatActivity {
 
@@ -29,6 +32,7 @@ public class ListUtsersActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Button newUser;
     Cursor users;
+    public static final String USER_ID = "USER_ID";
 
 
     @Override
@@ -38,10 +42,23 @@ public class ListUtsersActivity extends AppCompatActivity {
         list = findViewById(R.id.listUsers);
         toDoDB = new ToDoDB(this);
         newUser = findViewById(R.id.buttonNewUser);
+
         newUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ListUtsersActivity.this, InsertUserActivity.class));
+            }
+        });
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                Intent intent = new Intent(ListUtsersActivity.this, UpdateUserActivity.class);
+                intent.putExtra(USER_ID, l);
+                startActivity(intent);
+
             }
         });
     }
