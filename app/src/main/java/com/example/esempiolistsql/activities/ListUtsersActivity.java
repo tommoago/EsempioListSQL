@@ -17,10 +17,12 @@ import com.example.esempiolistsql.R;
 import com.example.esempiolistsql.adapters.UserAdapter;
 import com.example.esempiolistsql.database.ToDoDB;
 import com.example.esempiolistsql.database.UserTableHelper;
+import com.example.esempiolistsql.fragments.ConfirmDialogFragment;
+import com.example.esempiolistsql.fragments.ConfirmDialogFragmentListener;
 
 import java.util.List;
 
-public class ListUtsersActivity extends AppCompatActivity {
+public class ListUtsersActivity extends AppCompatActivity  implements ConfirmDialogFragmentListener {
 
     final String tableName = UserTableHelper.TABLE_NAME;
     final String sortOrder = UserTableHelper.SURNAME + " ASC ";
@@ -59,6 +61,16 @@ public class ListUtsersActivity extends AppCompatActivity {
                 intent.putExtra(USER_ID, l);
                 startActivity(intent);
 
+            }
+        });
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                users.moveToPosition(position);
+                String username = users.getString(users.getColumnIndex(UserTableHelper.USERNAME));
+                ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("ATTENZIONE","Sei sicuro di voler cancellare l'utente " +username +" ?",id);
+                dialogFragment.show(getSupportFragmentManager(),null);
+                return true;
             }
         });
     }
@@ -100,4 +112,16 @@ public class ListUtsersActivity extends AppCompatActivity {
             db.close();
     }
 
+    @Override
+    public void onPositivePressed(long toDoId) {
+        db = toDoDB.getWritableDatabase();
+        db.delete(UserTableHelper.TABLE_NAME,UserTableHelper._ID + " = ? ",new String[] {String.valueOf(toDoId)} );
+        onResume();
+        Toast.makeText(this,"Utente Eliminato",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNegativePressed() {
+        Toast.makeText(this,"Operazione annullata",Toast.LENGTH_LONG).show();
+    }
 }
