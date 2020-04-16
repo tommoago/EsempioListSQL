@@ -31,6 +31,7 @@ public class InsertActivity extends AppCompatActivity {
     EditText descriptionInput;
     Button saveButton;
     Spinner spinnerUsers;
+    long id=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,18 @@ public class InsertActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         spinnerUsers=findViewById(R.id.spinnerUsers);
         popolateSpinnerUsers();
-        spinnerUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinnerUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                InsertActivity.this.id=id;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+
 
         Date today = new Date();
         String todayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today);
@@ -86,6 +93,7 @@ public class InsertActivity extends AppCompatActivity {
                 ContentValues toDoValues = new ContentValues();
                 toDoValues.put(ToDoTableHelper.DATE, dateLabel.getText().toString());
                 toDoValues.put(ToDoTableHelper.DESCRIPTION, description);
+                toDoValues.put(ToDoTableHelper.ID_USER,id);
 
                 ToDoDB db = new ToDoDB(this);
                 SQLiteDatabase toDoDatabase = db.getReadableDatabase();

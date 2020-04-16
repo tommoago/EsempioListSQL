@@ -2,9 +2,11 @@ package com.example.esempiolistsql.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -36,11 +38,13 @@ public class ListUtsersActivity extends AppCompatActivity {
         list = findViewById(R.id.listUsers);
         toDoDB = new ToDoDB(this);
         newUser = findViewById(R.id.buttonNewUser);
+        newUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListUtsersActivity.this, InsertUserActivity.class));
+            }
+        });
     }
-
-
-
-
 
 
     @Override
@@ -57,7 +61,7 @@ public class ListUtsersActivity extends AppCompatActivity {
     }
 
     private void loadUsers() {
-        users = db.query(UserTableHelper.TABLE_NAME, null, null, null,
+        users = db.query(UserTableHelper.TABLE_NAME, null, UserTableHelper._ID + " != 0", null,
                 null, null, sortOrder);
         if (users != null) {
             if (adapter == null) {
